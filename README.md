@@ -186,6 +186,20 @@ console.log(braces.expand('a{b}c'));
 console.log(braces('a/{b,c}/d', { maxLength: 3 })); //=> throws an error
 ```
 
+### options.maxDepth
+
+**Type**: `Integer`
+
+**Default**: `100`
+
+Limits the nesting of parsed brace/parenthesis blocks and AST containers passed directly to `compile`, `expand`, or `stringify`. A non-negative integer may lower the limit; values above 100 are capped at 100, so the stack-safety limit cannot be disabled. Escaped, quoted and bracketed literals do not add AST nesting.
+
+Excess nesting throws a `RangeError` with `code === 'BRACES_MAX_DEPTH'`. Invalid option values throw a `TypeError`. This protects recursive AST processing; it does not bound regular-expression engine complexity or the total number of expanded alternatives.
+
+```js
+braces('{{{a,b}}}', { maxDepth: 2 }); // throws BRACES_MAX_DEPTH
+```
+
 ### options.expand
 
 **Type**: `Boolean`
